@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>庫存管理系統</title>
+    <script>
+      // 全域錯誤捕捉：模組載入失敗或渲染錯誤都顯示在畫面上，並寫入 data-errors 供診斷
+      window.__errs = []
+      function showErrors() {
+        var root = document.getElementById('root')
+        if (!root || root.getAttribute('data-errors')) return
+        var text = window.__errs.join('\n\n---\n\n')
+        root.setAttribute('data-errors', text)
+        root.innerHTML =
+          '<div style="padding:24px;font-family:monospace;color:#cf1322;background:#fff1f0">' +
+          '<h2 style="margin:0 0 12px">頁面載入失敗</h2><pre style="white-space:pre-wrap">' +
+          text.replace(/</g, '&lt;') +
+          '</pre></div>'
+      }
+      window.addEventListener(
+        'error',
+        function (e) {
+          if (e.target && e.target !== window && e.target.tagName === 'SCRIPT') {
+            window.__errs.push(
+              '腳本載入失敗：' + (e.target.src || e.target.href) + '（' + (e.target.dataset?.viteError || '') + '）',
+            )
+          } else {
+            window.__errs.push(
+              (e.message || 'unknown error') +
+                '\n檔案：' + (e.filename || '') + ':' + (e.lineno || '') +
+                '\n' + ((e.error && e.error.stack) || ''),
+            )
+          }
+          showErrors()
+        },
+        true,
+      )
+      window.addEventListener('unhandledrejection', function (e) {
+        window.__errs.push('未處理的 Promise：' + ((e.reason && e.reason.stack) || e.reason))
+        showErrors()
+      })
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

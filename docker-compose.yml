@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_DB: AILearn
+      # Windows 專屬的 Chinese (Traditional)_Taiwan.950 無法在 Linux 容器複製，改用 ICU
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=zh-TW --encoding=UTF8"
+    ports:
+      # 本機 5432 已被既有的 PostgreSQL 18.6 服務佔用，容器改用 5433
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d AILearn"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:${POSTGRES_PASSWORD:-devpassword}@db:5432/AILearn
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "flask db upgrade &&
+             flask seed --reset &&
+             flask run --host 0.0.0.0 --port 5000"
+
+volumes:
+  pgdata:
