@@ -53,12 +53,17 @@ def list_stock():
             continue
         payload.append(
             {
+                # id：stock_levels 主鍵。前端表格 rowKey 必須唯一，而
+                # (item_id, warehouse_id, bin_id) 不足以唯一——同一批商品在同一
+                # 倉庫的同一儲位可以有多個批次（uq_stock_level 含 batch_id）。
+                "id": level.id,
                 "item_id": level.item_id,
                 "item_code": item_code,
                 "item_name": item_name,
                 "warehouse_id": level.warehouse_id,
                 "warehouse_code": wh_code,
                 "bin_id": level.bin_id,
+                "batch_id": level.batch_id,
                 "on_hand": level.on_hand,
                 "reserved": level.reserved,
                 "available": available,

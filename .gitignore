@@ -7,3 +7,8 @@ __pycache__/
 *.log
 .DS_Store
 _bmad-output/
+.cloudflare/
+
+# 本機用的桌面捷徑（內含 %TEMP% 絕對路徑，只有這台機器有意義）
+庫存系統網址.cmd
+庫存系統開關.cmd

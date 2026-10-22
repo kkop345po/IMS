@@ -119,12 +119,15 @@ export const api = {
 }
 
 export interface StockRow {
+  /** stock_levels 主鍵；表格 rowKey 用它（item+warehouse+bin 不唯一，同倉同儲位可有多批次） */
+  id: number
   item_id: number
   item_code: string
   item_name: string
   warehouse_id: number
   warehouse_code: string
   bin_id: number
+  batch_id: number | null
   on_hand: string
   reserved: string
   available: string

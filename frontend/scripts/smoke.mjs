@@ -13,8 +13,9 @@ import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-const APP = 'http://localhost:5173'
-const API = 'http://127.0.0.1:5000/api'
+// APP 可用環境變數覆寫（例如用 Cloudflare Tunnel 的公開網址測正式建置產物）
+const APP = process.env.APP_URL || 'http://localhost:5173'
+const API = process.env.API_URL || 'http://127.0.0.1:5000/api'
 // 每次用不同 port，避免連到殘留的 Edge 實例
 const DEBUG_PORT = 9300 + Math.floor(Math.random() * 400)
 const EDGE_CANDIDATES = [
@@ -139,7 +140,9 @@ async function main() {
     await cdp.send('Network.setCookie', {
       name: 'session',
       value: session,
-      domain: 'localhost',
+      // cookie 必須綁在 APP 的網域上；用 url 讓 CDP 自動帶出 domain/path/secure。
+      // 寫死 'localhost' 的話，測 Cloudflare Tunnel 公開網址時 cookie 不會送出 → 未登入。
+      url: APP,
       path: '/',
     })
     await cdp.send('Page.navigate', { url: APP + route.path })

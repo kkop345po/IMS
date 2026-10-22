@@ -5,6 +5,7 @@
 - 需求文件：`_bmad-output/planning-artifacts/prds/prd-庫存管理系統-2026-10-21/prd.md`
 - 架構脊椎：`_bmad-output/planning-artifacts/architecture/architecture-庫存管理系統-2026-10-21/ARCHITECTURE-SPINE.md`
 - 施工清單：`_bmad-output/planning-artifacts/prds/prd-庫存管理系統-2026-10-21/mvp-scope.md`
+- **專案規矩（改程式前必讀）**：`AGENTS.md` ｜ **事故記錄**：`docs/lessons-learned.md`
 
 ---
 

@@ -81,7 +81,7 @@ export default function StockPage() {
       }
     >
       <Table
-        rowKey={(r) => `${r.item_id}-${r.warehouse_id}-${r.bin_id}`}
+        rowKey="id"
         dataSource={data?.items ?? []}
         columns={columns}
         loading={isLoading}
